@@ -20,13 +20,13 @@ create_file()
         touch $FILE2
         chmod -R 755 $FILE2
         echo 0 > ans.log
-    else
-        tail -n -1 $FILE > $FILE2
-        awk -v FPAT=':[^|]*' '{print $5}' $FILE2
+    # else
+    #     tail -n -1 $FILE > $FILE2
+    #     awk -v FPAT=':[^|]*' '{print $5}' $FILE2
     fi
 }
 create_file $FILE2
-
+temp="0"
 # process
 while [[ $num1 != "EXIT" && $num1 != "exit" ]]; do
     if [[ -z $num1 ]]; then
@@ -34,47 +34,39 @@ while [[ $num1 != "EXIT" && $num1 != "exit" ]]; do
     elif [[ ! -z $num1 ]]; then
         if [[ -z $operator ]] && [[ -z $num2 ]]; then
             case $num1 in 
-                HIST|hist)
+                "HIST"|"hist")
                     tail -5 $FILE
                 ;;
-                '')
-                    echo 'ERROR: SYNTAX ERROR'
-                ;;
-                # [+-]0)
-                #     echo 'ERROR: zero should not be signed'
-                # ;;
-                ANS|ans)
+                "ANS"|"ans")
+                    tail -n -1 $FILE > $FILE2
+                    awk -v FPAT=':[^|]*' '{print $5}' $FILE2
                     tail -n -1 $FILE2
-                    # awk -v FPAT=':[^|]*' '{print $5}' $FILE2
-                    # result=`cat $FILE2`
                 ;;
                 *)
                     echo "SYNTAX ERROR"
                 ;;
             esac
         else
-            # ANS=`awk -v FPAT=':[^|]*' '{print $5}' $FILE2`
-            # ANS=`cat $FILE2`
-            # ans=$ANS
-            # echo $ans
+            ANS=`tail -n -1 $FILE2`
+            ans=$ANS
             case $operator in
                 \+|+)
                     result=`echo "$num1 + $num2" | bc`
                     echo "Result: $result"
                     echo "$num1 $operator $num2 = $result" >> $FILE
-                    # echo "$result" > $FILE2
+                    ANS=`echo $result > $FILE2`
                 ;;
                 \-|-)
                     result=`echo "$num1 - $num2" | bc`
                     echo "Result: $result"
                     echo "$num1 $operator $num2 = $result" >> $FILE
-                    # echo "$result" > $FILE2
+                    ANS=`echo $result > $FILE2`
                 ;;
                 \*|x)
                     result=`echo "$num1 * $num2" | bc`
                     echo "Result: $result"
                     echo "$num1 $operator $num2 = $result" >> $FILE
-                    # echo "$result" > $FILE2
+                    ANS=`echo $result > $FILE2`
                 ;;
                 \/|/)
                     if [[ $num2 -le 0 ]]; then
@@ -84,26 +76,23 @@ while [[ $num1 != "EXIT" && $num1 != "exit" ]]; do
                     fi
                     echo "Result: $result"
                     echo "$num1 $operator $num2 = $result" >> $FILE
-                    # echo "$result" > $FILE2
+                    ANS=`echo $result > $FILE2`
                 ;;
                 \%|%)
                     result=`echo "scale=0; $num1 / $num2" | bc`
                     echo "Result: $result"
                     echo "$num1 $operator $num2 = $result" >> $FILE
-                    # echo "$result" >> $FILE2
+                    ANS=`echo $result > $FILE2`
                 ;;
                 *)
                     echo "SYNTAX ERROR"
                 ;;
             esac
-            # awk -v FPAT=':[^|]*' '{print $5}' $FILE2
+            ANS=`echo $result > $FILE2`
         fi
     else
         echo "SYNTAX ERROR"
     fi
-
-    echo "$result" >> $FILE2
-    # tail -n 1 $FILE > $FILE2
-    # awk -v FPAT=':[^|]*' '{print $5}' $FILE2
+    temp=`echo $result > $FILE2`
     read -p ">> " num1 operator num2
 done
