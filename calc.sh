@@ -1,33 +1,32 @@
 #! /bin/bash
 
-# read input file
+# Read input file
 read -p ">> " num1 operator num2
 
-# check and create temp file
+# Check and create temp file
 FILE=~/tmp.log
-create_file()
+CreateHistFile()
 {
     if [[ ! -f "$FILE" ]]; then
         touch $FILE
         chmod -R 755 $FILE
     fi
 }
-create_file $FILE
+CreateHistFile $FILE
 FILE2=~/ans.log
-create_file()
+CreateAnsFile()
 {
     if [[ ! -f "$FILE2" ]]; then
         touch $FILE2
         chmod -R 755 $FILE2
         echo 0 > ans.log
-    # else
-    #     tail -n -1 $FILE > $FILE2
-    #     awk -v FPAT=':[^|]*' '{print $5}' $FILE2
     fi
 }
-create_file $FILE2
+CreateAnsFile $FILE2
+
 temp="0"
-# process
+
+# Process calculator
 while [[ $num1 != "EXIT" && $num1 != "exit" ]]; do
     if [[ -z $num1 ]]; then
         echo "SYNTAX ERROR"
@@ -49,6 +48,9 @@ while [[ $num1 != "EXIT" && $num1 != "exit" ]]; do
         else
             ANS=`tail -n -1 $FILE2`
             ans=$ANS
+            if [[ $num1 == "ANS" ]]; then
+                num1=$ANS
+            fi
             case $operator in
                 \+|+)
                     result=`echo "$num1 + $num2" | bc`
