@@ -10,7 +10,6 @@ void sig_par(int signo)
     if (signo == SIGUSR1)
     {
         printf("PROCESS A RECEIVE SIGNAL FROM C AND SEND THE TERMINAL SIGNAL TO B...\n");
-        sleep(1);
         kill(pid_B, SIGUSR1);
         exit(signo);
     }
