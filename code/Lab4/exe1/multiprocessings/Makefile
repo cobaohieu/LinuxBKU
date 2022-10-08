@@ -4,7 +4,7 @@ BUILD_DIR := ./build
 SRC_DIR := ./src
 
 CXX = g++
-CXXFLAGS = -std=c++11 -pthread
+CXXFLAGS = -std=c++11
 MAKE_FILE_PATH = $(PWD)
 
 APP_PATH := $()
