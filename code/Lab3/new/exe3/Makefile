@@ -1,4 +1,4 @@
-TARGET_EXEC := calc
+TARGET_EXEC := exe_3
 
 BUILD_DIR := ./build
 SRC_DIR := ./src
