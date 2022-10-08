@@ -1,4 +1,4 @@
-TARGET_EXEC := exe_2
+TARGET_EXEC := exe2_1
 
 BUILD_DIR := ./build
 SRC_DIR := ./src
