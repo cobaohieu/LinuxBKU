@@ -32,7 +32,8 @@ inline bool check_exist_file(const std::string &file_name)
     return (stat(file_name.c_str(), &buffer) == 0);
 }
 
-void create_file(const std::string &file_name){
+void create_file(const std::string &file_name)
+{
     std::string value = "0";
     std::ofstream out_file(file_name);
 
@@ -40,7 +41,8 @@ void create_file(const std::string &file_name){
     out_file.close();
 }
 
-void write_file(){
+void write_file()
+{
     std::cout << "Write the stack to file" << std::endl;
 }
 
@@ -86,35 +88,36 @@ double div(double a, double b)
     return a / b;
 }
 
-void operators(char opert, double a, double b, double &ans, std::stack<std::string> &st)
+void operators(char opert, double a, double b, double &ans, std::stack<std::string> &st_container)
 {
     switch (opert)
     {
     case '+':
         // std::cout << "ans: " << ans << std::endl;
         ans = add(a, b);
-        st.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(add(a, b)));
-        std::cout << add(a, b) << std::endl;
+        st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(add(a, b)));
         break;
 
     case '-':
         ans = sub(a, b);
-        st.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(add(a, b)));
-        std::cout << sub(a, b) << std::endl;
+        st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(add(a, b)));
+        break;
+
+    case 'x':
+        ans = mul(a, b);
+        st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(mul(a, b)));
         break;
 
     case '*':
         ans = mul(a, b);
-        st.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(mul(a, b)));
-        std::cout << mul(a, b) << std::endl;
+        st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(mul(a, b)));
         break;
 
     case '/':
         if (a != 0)
         {
             ans = div(a, b);
-            st.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(div(a, b)));
-            std::cout << std::setprecision(2) << div(a, b) << std::endl;
+            st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(div(a, b)));
         }
         else
         {
@@ -126,8 +129,7 @@ void operators(char opert, double a, double b, double &ans, std::stack<std::stri
         if (a != 0)
         {
             ans = div(a, b);
-            st.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(div(a, b)));
-            std::cout << std::setprecision(0) << div(a, b);
+            st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(div(a, b)));
         }
         else
         {
@@ -143,12 +145,17 @@ void operators(char opert, double a, double b, double &ans, std::stack<std::stri
 
 int main()
 {
-    std::string num1, num2;
+    std::string num1 = "0", num2;
     char opert[] = "";
-    double ans = 0;
+    std::string ans = "0";
     std::string file_name = "log.txt";
     std::string choice;
-    std::stack<std::string> st;
+    
+    int line = 0;
+
+    std::stack<std::string> st_container;
+    std::stack<std::string> st_history = st_container;
+    std::stack<std::string> st_result = st_container;
 
     std::cout << ">> ";
     std::getline(std::cin, choice);
@@ -180,12 +187,11 @@ int main()
                 else
                 {
                     // std::cout << num1 << "is a integer" << std::endl;
-                    operators(opert[0], std::stod(num1), std::stod(num2), ans, st);
-                    std::stack<std::string> st1 = st;
-                    while (!st1.empty())
+                    operators(opert[0], std::stod(num1), std::stod(num2), std::to_string(ans), st_container);
+                    while (!st_result.empty())
                     {
-                        std::cout << st1.top() << std::endl;
-                        st1.pop();
+                        std::cout << st_result.top() << std::endl;
+                        st_result.pop();
                     }
                 }
             }
@@ -197,13 +203,30 @@ int main()
                 }
                 else if (num1 == "HIST")
                 {
-                    if (check_exist_file(file_name) == true)
+                    // if (check_exist_file(file_name) == true)
+                    // {
+                    //     display_five_lines(file_name);
+                    // }
+                    // else
+                    // {
+                    //     create_file(file_name);
+                    // }
+                    if (st_history.empty())
                     {
-                        display_five_lines(file_name);
+                        std::cout << "History is empty" << std::endl;
                     }
                     else
                     {
-                        create_file(file_name);
+                        while (!st_history.empty())
+                        {
+                            if (line == 5)
+                            {
+                                break;
+                            }
+                            std::cout << st_history.top() << std::endl;
+                            st_history.pop();
+                            ++line;
+                        }
                     }
                 }
                 else

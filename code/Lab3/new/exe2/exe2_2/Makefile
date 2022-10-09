@@ -36,7 +36,6 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 		$(CXX) $(OBJS) -o $@ $(LDFLAGS)
 
 # Build step for C source
-# Build step for C source
 # $(BUILD_DIR)/%.c.o: %.c
 		# mkdir -p $(dir $@)
 		# $(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@

@@ -36,6 +36,12 @@
         "cstring": "cpp",
         "ctime": "cpp",
         "sstream": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "bit": "cpp",
+        "chrono": "cpp",
+        "unordered_map": "cpp",
+        "functional": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp"
     }
 }

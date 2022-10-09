@@ -5,6 +5,7 @@ SRC_DIR := ./src
 
 CXX = g++
 CXXFLAGS = -std=c++11 -pthread
+# LIBS = -pthread
 MAKE_FILE_PATH = $(PWD)
 
 APP_PATH := $()
@@ -35,7 +36,6 @@ CPPFLAGS := $(INC_FLAGS) -MMD -MP
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 		$(CXX) $(OBJS) -o $@ $(LDFLAGS)
 
-# Build step for C source
 # Build step for C source
 # $(BUILD_DIR)/%.c.o: %.c
 		# mkdir -p $(dir $@)
