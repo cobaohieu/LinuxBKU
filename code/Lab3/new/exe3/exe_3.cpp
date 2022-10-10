@@ -38,7 +38,6 @@ int main()
                 }
                 printf("Process E %d...\n", getpid());
                 sleep(6);
-                // wait(NULL);
                 exit(0);
             }
             printf("Process C %d...\n", getpid());

@@ -4,7 +4,7 @@ using namespace std;
 #include <cstdio>
 #include <unistd.h>
 #include <cstdlib>
-#include<vector>
+#include <vector>
 #include <sys/wait.h>
 #include <sstream>
 int num_movies = 1682;

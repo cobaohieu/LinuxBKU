@@ -27,7 +27,6 @@ int count_circle(int total_point)
 int main(int argc, char const *argv[])
 {
     int total_point = 0, n;
-    double pi;
     pid_t pid_B, pid_C;
     std::string output1 = "output1.txt";
     std::string output2 = "output2.txt";
@@ -95,7 +94,7 @@ int main(int argc, char const *argv[])
     file_2.close();
 
     result_total = result1 + result2;
-    pi = 4.0 * result_total / total_point;
+    double pi = 4.0 * result_total / total_point;
     printf("Pi = %17.15f\n", pi);
 
     return 0;

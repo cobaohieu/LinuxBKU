@@ -11,10 +11,10 @@ int main(int argc, char const *argv[])
     int total_point;
     int square_points = 0, count_circle = 0;
     double x, y, r, pi;
-    
+
     if (argc == 1)
     {
-        printf("Enter n:\n");
+        printf("Please execute program such as.\n./exe4_1 1000000\n");
         return -1;
     }
     if (argc != 2)
@@ -38,7 +38,6 @@ int main(int argc, char const *argv[])
     }
 
     printf("Pi = %17.15f\n", pi);
-    // pthread_exit(0);
 
     return 0;
 }

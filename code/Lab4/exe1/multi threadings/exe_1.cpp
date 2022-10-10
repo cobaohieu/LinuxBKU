@@ -10,8 +10,8 @@
 
 void *circle_point(void *param)
 {
-    int temp = *(int*) param;
-    int *pcount = (int *) malloc(sizeof(int));
+    int temp = *(int *)param;
+    int *pcount = (int *)malloc(sizeof(int));
     for (int i = 0; i < temp; ++i)
     {
         double x = (double)rand() / (double)RAND_MAX;
@@ -22,7 +22,7 @@ void *circle_point(void *param)
             *pcount = *pcount + 1;
         }
     }
-    return (void *) pcount;
+    return (void *)pcount;
     pthread_exit(0);
 }
 
@@ -39,7 +39,7 @@ int main(int argc, char const *argv[])
 
     if (argc == 1)
     {
-        printf("Enter n:\n");
+        printf("Please execute program such as.\n./exe4_1 1000000\n");
         return -1;
     }
     if (argc != 2)
@@ -52,17 +52,18 @@ int main(int argc, char const *argv[])
 
     for (int i = 0; i < NUM_THREADS; ++i)
     {
-        pthread_create(&threadIDs[i], NULL, circle_point, (void *) &total_point);
+        pthread_create(&threadIDs[i], NULL, circle_point, (void *)&total_point);
     }
 
     for (int i = 0; i < NUM_THREADS; ++i)
     {
-        pthread_join(threadIDs[i], (void **) &result);
+        pthread_join(threadIDs[i], (void **)&result);
         temp += *result;
         count_circle += count[i];
     }
 
     double pi = 4.0 * temp / count_circle;
     printf("Pi = %17.15f\n", pi);
+
     return 0;
 }
