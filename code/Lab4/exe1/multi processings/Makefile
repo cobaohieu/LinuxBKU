@@ -1,19 +1,21 @@
-CC := g++
-CFLAGS := -Wall -g
-TARGET := Calc
-TARGET_EXEC := calc
+TARGET_EXEC := exe_1
 
-# $(wildcard *.cpp /xxx/xxx/*.cpp): get all .cpp files from the current directory and dir "/xxx/xxx/"
+CXX := g++
+CFLAGS := -std=c++11
+
+# Find all the C and C++ files we want to compile
 SRCS := $(wildcard *.cpp)
-# $(patsubst %.cpp,%.o,$(SRCS)): substitute all ".cpp" file name strings to ".o" file name strings
+
+# String substitution for every C/C++ file.
 OBJS := $(patsubst %.cpp,%.o,$(SRCS))
 
 .PHONY: all clean
 
-all: $(TARGET)
-$(TARGET): $(OBJS)
-	$(CC) -o $@ $^
+all: $(TARGET_EXEC)
+$(TARGET_EXEC): $(OBJS)
+	$(CXX) -o $@ $^
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $<
+	$(CXX) $(CFLAGS) -c $<
+	
 clean:
-	rm -rf $(TARGET) *.o
+	rm -rf $(TARGET_EXEC) *.o
