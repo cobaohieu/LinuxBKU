@@ -16,8 +16,6 @@
 #include <stack>
 #include <queue>
 
-#define INPUT_FILE "hist.txt"
-
 bool check_input(std::string input)
 {
     for (int i = 0; i < input.length(); ++i)
@@ -88,35 +86,39 @@ double div(double a, double b)
     return a / b;
 }
 
-void operators(char opert, double a, double b, double &ans, std::stack<std::string> &st_container)
+void operators(char opert, double a, double b, double *const &ans, std::stack<std::string> &st_container)
 {
     switch (opert)
     {
     case '+':
-        // std::cout << "ans: " << ans << std::endl;
-        ans = add(a, b);
+        *ans = add(a, b);
+        std::cout << *ans << std::endl;
         st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(add(a, b)));
         break;
 
     case '-':
-        ans = sub(a, b);
+        *ans = sub(a, b);
+        std::cout << *ans << std::endl;
         st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(add(a, b)));
         break;
 
     case 'x':
-        ans = mul(a, b);
+        *ans = mul(a, b);
+        std::cout << *ans << std::endl;
         st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(mul(a, b)));
         break;
 
     case '*':
-        ans = mul(a, b);
+        *ans = mul(a, b);
+        std::cout << *ans << std::endl;
         st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(mul(a, b)));
         break;
 
     case '/':
         if (a != 0)
         {
-            ans = div(a, b);
+            *ans = div(a, b);
+            std::cout << *ans << std::endl;
             st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(div(a, b)));
         }
         else
@@ -128,7 +130,8 @@ void operators(char opert, double a, double b, double &ans, std::stack<std::stri
     case '%':
         if (a != 0)
         {
-            ans = div(a, b);
+            *ans = div(a, b);
+            std::cout << *ans << std::endl;
             st_container.push(std::to_string(a) + " + " + std::to_string(b) + " = " + std::to_string(div(a, b)));
         }
         else
@@ -145,30 +148,28 @@ void operators(char opert, double a, double b, double &ans, std::stack<std::stri
 
 int main()
 {
-    std::string num1 = "0", num2;
+    std::string num1 = "0", num2 = "0";
     char opert[] = "";
-    std::string ans = "0";
+    // std::string ans = "0";
+    double res = 0;
+    double *ans = &res;
     std::string file_name = "log.txt";
     std::string choice;
-    
+
     int line = 0;
 
     std::stack<std::string> st_container;
-    std::stack<std::string> st_history = st_container;
     std::stack<std::string> st_result = st_container;
-
-    std::cout << ">> ";
-    std::getline(std::cin, choice);
-    std::istringstream iss(choice);
-
-    iss >> num1 >> opert >> num2;
-    while (num1 != "EXIT")
+    do
     {
-        if (num1.compare("EXIT") == 0)
-        {
-            exit(0);
-        }
-        if (num1.length() == 0)
+        num2.clear();
+        std::cout << ">> ";
+        std::getline(std::cin, choice);
+        std::istringstream iss(choice);
+
+        iss >> num1 >> opert >> num2;
+
+        if ((num1.length() == 0) && (std::cin.get() == '\n'))
         {
             std::cout << "SYNTAX ERROR" << std::endl;
         }
@@ -176,18 +177,13 @@ int main()
         {
             if (check_input(num1))
             {
-                if (strlen(opert) == 0)
+                if (strlen(opert) == 0) // && std::cin.get() == '\n'))
                 {
                     std::cout << "SYNTAX ERROR" << std::endl;
-                    if (num2.length() == 0)
-                    {
-                        std::cout << "SYNTAX ERROR" << std::endl;
-                    }
                 }
                 else
                 {
-                    // std::cout << num1 << "is a integer" << std::endl;
-                    operators(opert[0], std::stod(num1), std::stod(num2), std::to_string(ans), st_container);
+                    operators(opert[0], std::stod(num1), std::stod(num2), ans, st_container);
                     while (!st_result.empty())
                     {
                         std::cout << st_result.top() << std::endl;
@@ -197,20 +193,31 @@ int main()
             }
             else
             {
-                if (num1 == "ANS")
+                if (num1 == "ans")
                 {
-                    num1 = ans;
+                    if (strlen(opert) == 0) // && std::cin.get() == '\n'))
+                    {
+                        std::cout << "SYNTAX ERROR" << std::endl;
+                    }
+                    else
+                    {
+                        // if (num2.compare("") == 0 && strlen(opert) != NULL)
+                        if ((num2.length() == 0) && (num2.compare("") == 0))
+                        {
+                            std::cout << "SYNTAX ERROR" << std::endl;
+                        }
+                        else
+                        {
+                            std::ostringstream temp;
+                            temp << *ans;
+                            num1 = temp.str();
+                            operators(opert[0], std::stod(num1), std::stod(num2), ans, st_container);
+                        }
+                    }
                 }
                 else if (num1 == "HIST")
                 {
-                    // if (check_exist_file(file_name) == true)
-                    // {
-                    //     display_five_lines(file_name);
-                    // }
-                    // else
-                    // {
-                    //     create_file(file_name);
-                    // }
+                    std::stack<std::string> st_history = st_container;
                     if (st_history.empty())
                     {
                         std::cout << "History is empty" << std::endl;
@@ -235,11 +242,6 @@ int main()
                 }
             }
         }
-        std::cout << ">> ";
-        std::getline(std::cin, choice);
-        std::istringstream iss(choice);
-
-        iss >> num1 >> opert >> num2;
-    }
+    } while (num1 != "EXIT");
     return 0;
 }
