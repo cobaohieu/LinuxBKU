@@ -14,7 +14,7 @@ OBJS := $(patsubst %.cpp,%.o,$(SRCS))
 all: $(TARGET_EXEC)
 $(TARGET_EXEC): $(OBJS)
 	$(CXX) -o $@ $^
-%.o: %.cpp
+%.o: %.cppgit
 	$(CXX) $(CFLAGS) -c $<
 	
 clean:
