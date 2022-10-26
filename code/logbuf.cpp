@@ -24,6 +24,7 @@ void *wrlog(void *data)
 {
     // sem_wait(&_empty);
     int id = *(int *)data;
+
     pthread_mutex_lock(&count_mutex);
 
     if (count == MAX_BUFFER_SLOT)
@@ -101,7 +102,7 @@ int main()
         id[i] = i;
         pthread_create(&tid[i], NULL, wrlog, (void *)&id[i]);
     }
-i
+
     for (i = 0; i < MAX_LOOPS; i++)
     {
         pthread_join(tid[i], NULL);
