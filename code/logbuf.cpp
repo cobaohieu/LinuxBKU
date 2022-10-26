@@ -14,8 +14,8 @@
 
 std::string logbuf[MAX_BUFFER_SLOT];
 
-pthread_mutex_t count_mutex;
-pthread_cond_t count_cv;
+pthread_mutex_t mutex;
+pthread_cond_t cond;
 // sem_t _full, _empty;
 
 int count;
@@ -25,11 +25,11 @@ void *wrlog(void *data)
     // sem_wait(&_empty);
     int id = *(int *)data;
 
-    pthread_mutex_lock(&count_mutex);
+    pthread_mutex_lock(&mutex);
 
     if (count == MAX_BUFFER_SLOT)
     {
-        pthread_cond_signal(&count_cv);
+        pthread_cond_signal(&cond);
     }
 
     // sem_post(&_full);
@@ -39,7 +39,8 @@ void *wrlog(void *data)
         // std::cout << "wrlog(): " << id << "\n";
         ++count;
     }
-    pthread_mutex_unlock(&count_mutex);
+    
+    pthread_mutex_unlock(&mutex);
 
     usleep(20);
     fflush(stdout);
@@ -53,14 +54,14 @@ void flushlog()
 
     // std::cout << "flushlog()\n";
 
-    pthread_cond_wait(&count_cv, &count_mutex);
+    pthread_cond_wait(&cond, &mutex);
 
-    for (i = 0; i < count; i++)
+    for (i = 0; i < count; ++i)
     {
         std::cout << "Slot " << i << ": " << logbuf[i] << "\n";
         logbuf[i] = std::to_string(-1);
     }
-    // pthread_mutex_unlock(&count_mutex);
+    // pthread_mutex_unlock(&mutex);
     fflush(stdout);
 
     /* Reset buffer */
@@ -88,8 +89,8 @@ int main()
     pthread_t tid[MAX_LOOPS];
     int id[MAX_LOOPS];
 
-    pthread_mutex_init(&count_mutex, NULL);
-    pthread_cond_init(&count_cv, NULL);
+    pthread_mutex_init(&mutex, NULL);
+    pthread_cond_init(&cond, NULL);
     // sem_init(&_full, 0, 0);
     // sem_init(&_empty, 0, MAX_BUFFER_SLOT);
 
@@ -97,13 +98,13 @@ int main()
     timer_start(flushlog, 50);
 
     /* Asynchronous invoke task writelog */
-    for (i = 0; i < MAX_LOOPS; i++)
+    for (i = 0; i < MAX_LOOPS; ++i)
     {
         id[i] = i;
         pthread_create(&tid[i], NULL, wrlog, (void *)&id[i]);
     }
 
-    for (i = 0; i < MAX_LOOPS; i++)
+    for (i = 0; i < MAX_LOOPS; ++i)
     {
         pthread_join(tid[i], NULL);
     }
