@@ -1,0 +1,1 @@
+cmd_/home/administrator/Dev/LinuxBKU/code/Lab10/mychardev.o := ld -m elf_x86_64 -z noexecstack   -r -o /home/administrator/Dev/LinuxBKU/code/Lab10/mychardev.o /home/administrator/Dev/LinuxBKU/code/Lab10/main.o

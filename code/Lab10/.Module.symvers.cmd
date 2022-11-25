@@ -1,0 +1,1 @@
+cmd_/home/administrator/Dev/LinuxBKU/code/Lab10/Module.symvers := sed 's/\.ko$$/\.o/' /home/administrator/Dev/LinuxBKU/code/Lab10/modules.order | scripts/mod/modpost -m -a  -o /home/administrator/Dev/LinuxBKU/code/Lab10/Module.symvers -e -i Module.symvers   -T -

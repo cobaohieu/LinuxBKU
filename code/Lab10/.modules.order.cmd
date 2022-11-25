@@ -1,0 +1,1 @@
+cmd_/home/administrator/Dev/LinuxBKU/code/Lab10/modules.order := {   echo /home/administrator/Dev/LinuxBKU/code/Lab10/mychardev.ko; :; } | awk '!x[$$0]++' - > /home/administrator/Dev/LinuxBKU/code/Lab10/modules.order
