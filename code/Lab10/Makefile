@@ -5,7 +5,7 @@ C_FLAGS := -Wall -g
 KMOD_DIR := $(shell pwd)
 TARGET_PATH := /lib/modules/$(shell uname -r)/kernel/drivers/char
 
-OBJECTS := main.o
+OBJECTS := cobaohieu.o
 
 ccflags-y += $(C_FLAGS)
 

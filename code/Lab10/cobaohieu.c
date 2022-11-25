@@ -13,7 +13,7 @@
 static int mychardev_open(struct inode *inode, struct file *file);
 static int mychardev_release(struct inode *inode, struct file *file);
 static long mychardev_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
-static const char data[] = "Hello world from kernel mode!n";
+static const char data[] = "Hello from the kernel world!\n";
 static const ssize_t datalen = sizeof(data);
 static ssize_t mychardev_read(struct file *file, char __user *buf, size_t count,
                               loff_t *offset);
@@ -46,21 +46,16 @@ static int __init mychardev_init(void)
 {
     int err, i;
     dev_t dev;
-    err = alloc_chrdev_region(&dev, 0, MAX_DEV, "mychardev");
+    err = alloc_chrdev_region(&dev, 0, MAX_DEV, "cobaohieu");
     dev_major = MAJOR(dev);
-    mychardev_class = class_create(THIS_MODULE, "mychardev");
+    mychardev_class = class_create(THIS_MODULE, "cobaohieu");
     mychardev_class->dev_uevent = mychardev_uevent;
     for (i = 0; i < MAX_DEV; i++)
     {
         cdev_init(&mychardev_data[i].cdev, &mychardev_fops);
         mychardev_data[i].cdev.owner = THIS_MODULE;
         cdev_add(&mychardev_data[i].cdev, MKDEV(dev_major, i), 1);
-        device_create(mychardev_class,
-                      NULL,
-                      MKDEV(dev_major,
-                            i),
-                      NULL,
-                      "mychardev-%d", i);
+        device_create(mychardev_class, NULL, MKDEV(dev_major, i), NULL, "cobaohieu-%d", i);
     }
     return 0;
 }
@@ -104,7 +99,10 @@ static ssize_t mychardev_read(struct file *file, char __user *buf, size_t count,
     printk("Reading device: %d\n", MINOR(file->f_path.dentry->d_inode->i_rdev));
     /* If position is behind the end of a file we have nothing to read */
     if (*offset >= datalen)
+    {
         return 0;
+        // return -EFAULT;
+    }
 
     /* If a user tries to read more than we have, read only as many bytes as we have */
     if (*offset + count > datalen)
@@ -173,6 +171,44 @@ static ssize_t mychardev_write(struct file *file, const char __user *buf, size_t
     }
     return count;
 }
+
+// static ssize_t mychardev_read(struct file *file, char __user *buf, size_t count, loff_t *offset)
+// {
+//     uint8_t *data = "Hello from the kernel world!\n";
+//     size_t datalen = strlen(data);
+//     printk("Reading device: %d\n", MINOR(file->f_path.dentry->d_inode->i_rdev));
+//     if (count > datalen)
+//     {
+//         count = datalen;
+//     }
+//     if (copy_to_user(buf, data, count))
+//     {
+//         return -EFAULT;
+//     }
+//     return count;
+// }
+// static ssize_t mychardev_write(struct file *file, const char __user *buf, size_t count, loff_t *offset)
+// {
+//     size_t maxdatalen = 30, ncopied;
+//     uint8_t databuf[maxdatalen];
+//     printk("Writing device: %d\n", MINOR(file->f_path.dentry->d_inode->i_rdev));
+//     if (count < maxdatalen)
+//     {
+//         maxdatalen = count;
+//     }
+//     ncopied = copy_from_user(databuf, buf, maxdatalen);
+//     if (ncopied == 0)
+//     {
+//         printk("Copied %zd bytes from the user\n", maxdatalen);
+//     }
+//     else
+//     {
+//         printk("Could't copy %zd bytes from the user\n", ncopied);
+//     }
+//     databuf[maxdatalen] = 0;
+//     printk("Data from the user: %s\n", databuf);
+//     return count;
+// }
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Co Bao Hieu");
