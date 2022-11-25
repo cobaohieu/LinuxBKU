@@ -1,1 +1,0 @@
-cmd_/home/administrator/Dev/LinuxBKU/code/Lab10/mychardev.ko := ld -r -m elf_x86_64 -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/administrator/Dev/LinuxBKU/code/Lab10/mychardev.ko /home/administrator/Dev/LinuxBKU/code/Lab10/mychardev.o /home/administrator/Dev/LinuxBKU/code/Lab10/mychardev.mod.o;  true
