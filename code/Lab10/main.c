@@ -116,7 +116,7 @@ static ssize_t device_write(struct file *file, const char __user *buf, size_t co
     {
         databuf[maxdatalen] = 0;
         printk("Data from the user: -EFAULT\n");
-        // return -EFAULT;
+        return -EFAULT;
     }
     return count;
 }
